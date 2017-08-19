@@ -21,7 +21,6 @@ module.exports = {
           return res.view('inicioEventos', {categorias: categoriaEncontradas})
         }
 
-
       })
   }
 
