@@ -7,10 +7,12 @@
 
 module.exports = {
 
-  crearEvento: function (req,res){
-    var parametros = req.allParams();
+  crearEvento: function (requisito,resultado){
+    var parametros = requisito.allParams();
     sails.log.info("Parametros",parametros);
 
+    //declaracion de variables para el rigistro de un nuevo evento, ademas de caragr las variables
+    //que deben ingresarse en la base de datos
     var nuevoEvento = {
       nombreEvento:parametros.nombreEvento,
       fechaEvento:parametros.fechaEvento,
@@ -31,38 +33,39 @@ module.exports = {
 
     Evento.create(nuevoEvento).exec(function(error, eventoCreado){
       if(error){
-        return res.serverError(error);
+        return resultado.serverError(error);
       }
       else{
-        return res.redirect("/");
+        return resultado.redirect("/");
       }
     });
 
   },
 
-  detalleEvento: function (req, res) {
-    var parametros = req.allParams();
+  //aqui podremos observar el detalle del resultado del registro del evento
+  detalleEvento: function (requisito, resultado) {
+    var parametros = requisito.allParams();
     if (parametros.id) {
       Evento.findOne({
         id: parametros.id
       })
         .exec(function (err, eventoEncontrado) {
           if (err)
-            return res.serverError(err);
+            return resultado.serverError(err);
           if (eventoEncontrado) {
             //Si encontro
-            return res.view('detalleEvento', {
+            return resultado.view('detalleEvento', {
               evento: eventoEncontrado
             });
           }
           else {
             //No encontro
-            return res.redirect('/inicio');
+            return resultado.redirect('/inicio');
           }
         });
     }
     else {
-      return res.redirect('/crearUsuario');
+      return resultado.redirect('/crearUsuario');
     }
   }
 
